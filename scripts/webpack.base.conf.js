@@ -145,6 +145,7 @@ module.exports = {
 }
 
 module.exports.plugins = [
+  // @todo Separate vue react framework CommonsChunkPlugin
   // new webpack.optimize.ModuleConcatenationPlugin(),
   new CommonsChunkPlugin({
     name: 'vendors',
