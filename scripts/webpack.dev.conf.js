@@ -25,14 +25,17 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     // @todo add before middleware
     // https://webpack.js.org/configuration/dev-server/#devserver-before
     // before: function (app){
-    //   app.get('*', function(req, res, next) {
-    //     try {
-    //       var path = req.path.slice(1).replace(/\.html$/, '') + '.html';
-    //       res.sendFile(path);
-    //     } catch (e) {
-    //       next(e);
-    //     }
-    //   });
+    //   // app.get('/ie.html', function(req, res, next) {
+    //   //   res.sendFile(path.join(__dirname, '../static/ie.html'));
+    //   // })
+    //   // app.get('*', function(req, res, next) {
+    //   //   try {
+    //   //     var path = req.path.slice(1).replace(/\.html$/, '') + '.html';
+    //   //     res.sendFile(path);
+    //   //   } catch (e) {
+    //   //     next(e);
+    //   //   }
+    //   // });
     // },
     clientLogLevel: 'warning',
     // historyApiFallback: {
@@ -47,10 +50,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
-    openPage: 'user/index',
+    openPage: 'user/index.html',
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,
+    contentBase: path.resolve(__dirname, '../static'),
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
