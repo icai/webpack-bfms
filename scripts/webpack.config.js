@@ -27,7 +27,6 @@ const chunks = []
 glob.sync('./src/pages/**/app.js').forEach(path => {
   const chunk = path.split('./src/pages/')[1].split('/app.js')[0]
   entries[chunk] = path
-  console.info(chunk, path);
   chunks.push(chunk)
 })
 

@@ -2,17 +2,21 @@
   <div id="app">
     <el-card class="index-card">
       <div slot="header">
-        My Codes
+        Codeing
+      </div>
+
+      <div class="text-center">
+        <img v-bind:src="logoImg">
       </div>
       <ul>
         <li>
-          <a href="https://github.com/Plortinus/vue-multiple-pages" target="_blank">
-            Vue Multiple Pages
+          <a href="https://github.com/icai/webpack-bfms" target="_blank">
+            webpack-bfms
           </a>
         </li>
         <li>
-          <a href="https://github.com/Plortinus/element-china-area-data" target="_blank">
-            Element China Area Data
+          <a href="https://github.com/vue-template" target="_blank">
+            Vue template
           </a>
         </li>
       </ul>
@@ -47,6 +51,9 @@
 </script>
 
 <style lang="postcss">
+  .text-center {
+    text-align:center;
+  }
   .index-card {
     width: 800px;
     margin: 100px auto;

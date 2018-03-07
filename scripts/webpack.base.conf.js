@@ -2,7 +2,10 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
+const glob = require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
+const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -19,14 +22,24 @@ const createLintingRule = () => ({
   }
 })
 
+const entries = {}
+const chunks = []
+glob.sync('./src/pages/**/app.js', {root: path.resolve(__dirname, '../')}).forEach(path => {
+  const chunk = path.split('./src/pages/')[1].split('/app.js')[0]
+  entries[chunk] = path
+  chunks.push(chunk)
+})
+
+
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
+  // entry: {
+  //   app: './src/main.js'
+  // },
+  entry: entries,
   output: {
     path: config.build.assetsRoot,
-    filename: '[name].js',
+    filename: 'assets/js/[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
@@ -36,6 +49,9 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      assets: resolve('src/assets'),
+      components: resolve('src/components'),
+      root: resolve('node_modules')
     }
   },
   module: {
@@ -74,7 +90,18 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      {
+        test: /\.html$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            root: resolve('src'),
+            attrs: ['img:src', 'link:href']
+          }
+        }]
+      },
+
     ]
   },
   node: {
@@ -90,3 +117,29 @@ module.exports = {
     child_process: 'empty'
   }
 }
+
+module.exports.plugins = [
+  // new webpack.optimize.ModuleConcatenationPlugin(),
+  new CommonsChunkPlugin({
+    name: 'vendors',
+    filename: 'assets/js/vendors.js',
+    chunks: chunks,
+    minChunks: chunks.length
+  })
+];
+
+glob.sync('./src/pages/**/*.html', { root: path.resolve(__dirname, '../') }).forEach(path => {
+  const chunk = path.split('./src/pages/')[1].split('/app.html')[0]
+  const filename = chunk + '.html'
+  const htmlConf = {
+    filename: filename,
+    template: path,
+    inject: 'body',
+    favicon: './src/assets/img/logo.png',
+    hash: process.env.NODE_ENV === 'production',
+    chunks: ['vendors', chunk]
+  }
+  module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
+})
+
+
