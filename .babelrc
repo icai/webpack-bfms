@@ -1,5 +1,6 @@
 {
   "presets": [
+    'react',
     ["env", {
       "modules": false,
       "targets": {
@@ -8,11 +9,11 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-vue-jsx", "transform-runtime"],
+  "plugins": ["transform-react-jsx", "transform-runtime"],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],
-      "plugins": ["transform-vue-jsx", "transform-es2015-modules-commonjs", "dynamic-import-node"]
+      "plugins": ["transform-react-jsx", "transform-es2015-modules-commonjs", "dynamic-import-node"]
     }
   }
 }

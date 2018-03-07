@@ -22,6 +22,7 @@
       </ul>
       <el-button type="primary" @click="gogogo">To Customer Home Page</el-button>
       <el-button type="primary" plain @click="tototo">To User Login Page</el-button>
+      <el-button type="primary" plain @click="rerere">To React form Page</el-button>
     </el-card>
   </div>
 </template>
@@ -42,6 +43,9 @@
     methods: {
       gogogo () {
         location.assign('../customer/home.html')
+      },
+      rerere () {
+        location.assign('../antd/form.html')
       },
       tototo () {
         location.assign('../user/login.html')
