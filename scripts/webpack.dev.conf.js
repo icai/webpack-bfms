@@ -22,6 +22,18 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    // @todo add before middleware
+    // https://webpack.js.org/configuration/dev-server/#devserver-before
+    // before: function (app){
+    //   app.get('*', function(req, res, next) {
+    //     try {
+    //       var path = req.path.slice(1).replace(/\.html$/, '') + '.html';
+    //       res.sendFile(path);
+    //     } catch (e) {
+    //       next(e);
+    //     }
+    //   });
+    // },
     clientLogLevel: 'warning',
     // historyApiFallback: {
     //   rewrites: [
@@ -35,7 +47,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
-    openPage: 'user/login.html',
+    openPage: 'user/index',
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,

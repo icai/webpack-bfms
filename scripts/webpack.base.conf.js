@@ -154,6 +154,10 @@ module.exports.plugins = [
   })
 ];
 
+// @todo config template map (inject: false)
+// https://github.com/jaketrent/html-webpack-template
+// https://www.npmjs.com/search?q=%20html-webpack-plugin&page=1&ranking=optimal
+
 glob.sync('./src/pages/**/*.html', { root: path.resolve(__dirname, '../') }).forEach(path => {
   const chunk = path.split('./src/pages/')[1].split('/app.html')[0]
   const filename = chunk + '.html'
