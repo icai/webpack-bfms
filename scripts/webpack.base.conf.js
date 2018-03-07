@@ -24,8 +24,8 @@ const createLintingRule = () => ({
 
 const entries = {}
 const chunks = []
-glob.sync('./src/pages/**/app.js', {root: path.resolve(__dirname, '../')}).forEach(path => {
-  const chunk = path.split('./src/pages/')[1].split('/app.js')[0]
+glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}).forEach(path => {
+  const chunk = path.split('./src/pages/')[1].split(/\/app\.jsx?/)[0]
   entries[chunk] = path
   chunks.push(chunk)
 })

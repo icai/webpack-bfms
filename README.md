@@ -9,19 +9,19 @@
 
 何为泛生态技术？
 
-提问:
+- 提问:
 
 为什么一个项目不能同时使用Vue, React, ~~Angular~~？
 
 当然一个项目用一种技术呈现是最好不过的，但是很多时候迫不得已。
 
 
-不支持react vue 交叉使用, 如
+- 不支持react vue 交叉使用, 如
 https://github.com/akxcv/vuera (Vue in React, React in Vue. Seamless integration of the two.)
 
  
 
-一个原则：
+- 一个原则：
 
 多页应用，多页应用更符合主流场景，转换单页应用 (N->1) 零成本
 
@@ -31,8 +31,8 @@ https://github.com/akxcv/vuera (Vue in React, React in Vue. Seamless integration
 ## 约定 
 
 
-vue 不使用 jsx 语法  
-react 使用 jsx语法
+- vue **不使用** jsx 语法  
+- react **使用** jsx语法
 
 ### .babelrc
 
@@ -60,10 +60,7 @@ react 使用 jsx语法
 ```
 
 
-
-
 ----
-
 
 ## 参考
 
