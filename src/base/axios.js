@@ -1,11 +1,9 @@
-import axois from 'axios';
+import axios from 'axios';
 
 // https://github.com/axios/axios
 // create axios with default configure and return instance
-var instance = axios.create({
+export default axios.create({
   baseURL: 'https://some-domain.com/api/',
-  timeout: 1000,
-  headers: {'X-Custom-Header': 'foobar'}
-});
-
-module.exports = instance;
+  timeout: 1000
+  // headers: {'X-Custom-Header': 'foobar'}
+})

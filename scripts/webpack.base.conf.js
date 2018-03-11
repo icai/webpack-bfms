@@ -51,7 +51,8 @@ module.exports = {
       '@': resolve('src'),
       assets: resolve('src/assets'),
       components: resolve('src/components'),
-      root: resolve('node_modules')
+      root: resolve('node_modules'),
+      ajax: resolve('src/base/axios')
     }
   },
   module: {
