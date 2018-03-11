@@ -73,6 +73,8 @@
     "husky": "^0.14.3",
     "jest": "^22.0.4",
     "jest-serializer-vue": "^0.3.0",
+    "lodash": "^4.17.5",
+    "lodash-loader": "^1.2.0",
     "nightwatch": "^0.9.12",
     "node-notifier": "^5.1.2",
     "optimize-css-assets-webpack-plugin": "^3.2.0",

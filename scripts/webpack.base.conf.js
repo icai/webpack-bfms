@@ -23,11 +23,20 @@ const createLintingRule = () => ({
 })
 
 const entries = {}
-const chunks = []
+const chunks = {}
+chunks.vue = [];
+chunks.react = [];
+// vue use js,
+// react use jsx
 glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}).forEach(path => {
   const chunk = path.split('./src/pages/')[1].split(/\/app\.jsx?/)[0]
   entries[chunk] = path
-  chunks.push(chunk)
+  if(path.endsWith('js')) {
+    chunks.vue.push(chunk)
+  } else if(path.endsWith('jsx')) {
+    chunks.react.push(chunk)
+  }
+  // chunks.push(chunk)
 })
 
 
@@ -58,22 +67,6 @@ module.exports = {
   module: {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),
-
-      // {
-      //   test: /\.(js|jsx)$/,
-      //   enforce: 'pre',
-      //   use: [
-      //     {
-      //       options: {
-      //         formatter: eslintFormatter,
-
-      //       },
-      //       loader: 'eslint-loader',
-      //     },
-      //   ],
-      //   include: paths.appSrc,
-      // },
-
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -117,18 +110,18 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      },
-      {
-        test: /\.html$/,
-        use: [{
-          loader: 'html-loader',
-          options: {
-            root: resolve('src'),
-            attrs: ['img:src', 'link:href']
-          }
-        }]
-      },
-
+      }
+      // see https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md
+      // ,{
+      //   test: /\.html$/,
+      //   use: [{
+      //     loader: 'html-loader',
+      //     options: {
+      //       root: resolve('src'),
+      //       attrs: ['img:src', 'link:href']
+      //     }
+      //   }]
+      // }
     ]
   },
   node: {
@@ -149,29 +142,43 @@ module.exports.plugins = [
   // @todo Separate vue react framework CommonsChunkPlugin
   // new webpack.optimize.ModuleConcatenationPlugin(),
   new CommonsChunkPlugin({
-    name: 'vendors',
-    filename: 'assets/js/vendors.js',
-    chunks: chunks,
-    minChunks: chunks.length
+    name: 'vendor-vue',
+    chunks: chunks.vue,
+    minChunks: chunks.vue.length
+  }),
+  new CommonsChunkPlugin({
+    name: 'vendor-react',
+    chunks: chunks.react,
+    minChunks: chunks.react.length
   })
 ];
 
-// @todo config template map (inject: false)
+
+
+// config template map
 // https://github.com/jaketrent/html-webpack-template
 // https://www.npmjs.com/search?q=%20html-webpack-plugin&page=1&ranking=optimal
+// https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md
 
-glob.sync('./src/pages/**/*.html', { root: path.resolve(__dirname, '../') }).forEach(path => {
-  const chunk = path.split('./src/pages/')[1].split('/app.html')[0]
-  const filename = chunk + '.html'
-  const htmlConf = {
-    filename: filename,
-    template: path,
-    inject: 'body',
-    favicon: './src/assets/img/logo.png',
-    hash: process.env.NODE_ENV === 'production',
-    chunks: ['vendors', chunk]
-  }
-  module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
-})
+for(let ch in chunks){
+  chunks[ch].forEach((chunk) => {
+    const filename = chunk + '.html'
+    const htmlConf = {
+      filename: filename,
+      title: chunk,
+      template: './layout/layout.html',
+      inject: false,
+      favicon: './src/assets/img/logo.png',
+      hash: process.env.NODE_ENV === 'production',
+      chunks: ['vendor-' + ch , chunk],
+      appMountId: 'app',
+      googleAnalytics: {
+        trackingId: 'UA-XXXX-XX',
+        pageViewOnLoad: true
+      }
+    }
+    module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
+  })
+}
 
 
