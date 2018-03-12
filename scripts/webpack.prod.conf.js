@@ -83,6 +83,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
     // split vendor js into its own file
+    // https://medium.com/webpack/webpack-bits-getting-the-most-out-of-the-commonschunkplugin-ab389e5f318
     // new webpack.optimize.CommonsChunkPlugin({
     //   name: 'vendor',
     //   minChunks (module) {
