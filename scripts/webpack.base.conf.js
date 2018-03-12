@@ -2,6 +2,7 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
+const layoutMap = require('../config/layout.map')
 const glob = require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
@@ -36,7 +37,6 @@ glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}
   } else if(path.endsWith('jsx')) {
     chunks.react.push(chunk)
   }
-  // chunks.push(chunk)
 })
 
 
@@ -112,16 +112,16 @@ module.exports = {
         }
       }
       // see https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md
-      // ,{
-      //   test: /\.html$/,
-      //   use: [{
-      //     loader: 'html-loader',
-      //     options: {
-      //       root: resolve('src'),
-      //       attrs: ['img:src', 'link:href']
-      //     }
-      //   }]
-      // }
+      ,{
+        test: /\.html$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            root: resolve('src'),
+            attrs: ['img:src', 'link:href']
+          }
+        }]
+      }
     ]
   },
   node: {
@@ -166,7 +166,7 @@ for(let ch in chunks){
     const htmlConf = {
       filename: filename,
       title: chunk,
-      template: './layout/layout.html',
+      template: layoutMap[chunk] ||'./layout/layout.tpl',
       inject: false,
       favicon: './src/assets/img/logo.png',
       hash: process.env.NODE_ENV === 'production',
