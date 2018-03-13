@@ -59,11 +59,19 @@ https://github.com/akxcv/vuera (Vue in React, React in Vue. Seamless integration
 
 ```
 
+## 单页多页双开
+
+同时支持单页多页，双开模式，但是建议只用一种技术框架   
+双开模式以 Vue 为例，并引入 https://github.com/PanJiaChen/vue-element-admin  部分页面为示例
+
+查看分支 `single-multi`
+
 
 ----
 
 ## 参考
 
+https://github.com/PanJiaChen/vue-element-admin  
 https://github.com/Plortinus/vue-multiple-pages   
 https://github.com/webpack/webpack-dev-server   
 https://github.com/nodeca/mincer   

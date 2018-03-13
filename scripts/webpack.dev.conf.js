@@ -37,7 +37,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     // historyApiFallback: {
     //   rewrites: [
-    //     { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+    //     { from: /dashboard.*/, to: path.posix.join(config.dev.assetsPublicPath, 'dashboard.html') },
     //   ],
     // },
     historyApiFallback: false,
@@ -47,7 +47,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
-    openPage: '/login',
+    openPage: 'login',
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,
