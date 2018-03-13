@@ -35,19 +35,19 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       });
     },
     clientLogLevel: 'warning',
-    // historyApiFallback: {
-    //   rewrites: [
-    //     { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
-    //   ],
-    // },
-    historyApiFallback: false,
+    historyApiFallback: {
+      rewrites: [
+        { from: /admin\/.*/, to: path.posix.join(config.dev.assetsPublicPath, 'admin.html') },
+      ],
+    },
+    // historyApiFallback: false,
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
-    openPage: '/login',
+    openPage: 'login',
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,

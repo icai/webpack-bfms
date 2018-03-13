@@ -30,8 +30,8 @@ chunks.vue = [];
 chunks.react = [];
 // vue use js,
 // react use jsx
-glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}).forEach(path => {
-  const chunk = path.split('./src/pages/')[1].split(/\/app\.jsx?/)[0]
+glob.sync('./src/pages/**/app.@(js)', {root: path.resolve(__dirname, '../')}).forEach(path => {
+  const chunk = path.split('./src/pages/')[1].split(/\/app\.js/)[0]
   entries[chunk] = path
   if(path.endsWith('js')) {
     chunks.vue.push(chunk)
@@ -60,6 +60,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      admin: resolve('src/pages/admin'),
       assets: resolve('src/assets'),
       components: resolve('src/components'),
       root: resolve('node_modules'),
@@ -90,8 +91,17 @@ module.exports = {
         },
       },
       {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: [resolve('src/pages/admin/icons')],
+        options: {
+          symbolId: 'icon-[name]'
+        }
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [resolve('src/pages/admin/icons')],
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
