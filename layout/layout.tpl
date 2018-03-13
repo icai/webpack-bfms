@@ -3,6 +3,9 @@
 <html lang="en" class="" <% if(htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  <!--[if lte IE 9]>
+      <script>window.location.href= '//' + location.host + '/static/ie.html?referrer='+location.href;</script>
+  <![endif]-->
   <title><%= htmlWebpackPlugin.options.title || 'Webpack App'%></title>
 
 <% if (htmlWebpackPlugin.options.templateChunks) { %>

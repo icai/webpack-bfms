@@ -2,7 +2,7 @@
  <div id="main">
     <div class="header" role="header">
         <span class="logo-min"><img src="../../assets/img/login/logo_white.png" /></span>
-        <span class="copy-name">蜘点YY管理系统</span>
+        <span class="copy-name">蜘点后台管理系统</span>
         <div class="top-nav pull-right">
             <el-button class="a" round size="mini">蜘点官网</el-button>
             <el-button class="a" round size="mini">官方微博</el-button>
