@@ -42,13 +42,13 @@
     },
     methods: {
       gogogo () {
-        location.assign('../customer/home.html')
+        location.assign('../customer/home')
       },
       rerere () {
-        location.assign('../antd/form.html')
+        location.assign('../antd/form')
       },
       tototo () {
-        location.assign('../user/login.html')
+        location.assign('../user/login')
       }
     }
   }

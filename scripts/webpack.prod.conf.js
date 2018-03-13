@@ -114,6 +114,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       minChunks: 3
     }),
 
+    // https://github.com/webpack-contrib/copy-webpack-plugin
+    //
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -121,7 +123,15 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
+    ]),
+
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../Web.config'),
+        to: config.build.assetsRoot,
+      }
     ])
+
   ]
 })
 
