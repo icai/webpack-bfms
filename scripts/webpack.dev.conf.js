@@ -50,7 +50,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
-    openPage: 'user/index.html',
+    openPage: 'login.html',
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,

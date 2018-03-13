@@ -41,6 +41,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         }
       },
       sourceMap: config.build.productionSourceMap,
+      cache: true,
       parallel: true
     }),
     // extract css into its own file

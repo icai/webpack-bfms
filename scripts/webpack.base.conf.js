@@ -7,6 +7,7 @@ const glob = require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -160,25 +161,55 @@ module.exports.plugins = [
 // https://www.npmjs.com/search?q=%20html-webpack-plugin&page=1&ranking=optimal
 // https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md
 
-for(let ch in chunks){
-  chunks[ch].forEach((chunk) => {
-    const filename = chunk + '.html'
-    const htmlConf = {
-      filename: filename,
-      title: chunk,
-      template: layoutMap[chunk] ||'./layout/layout.tpl',
-      inject: false,
-      favicon: './src/assets/img/logo.png',
-      hash: process.env.NODE_ENV === 'production',
-      chunks: ['vendor-' + ch , chunk],
-      appMountId: 'app',
-      googleAnalytics: {
-        trackingId: 'UA-XXXX-XX',
-        pageViewOnLoad: true
+
+if (process.env.NODE_ENV === 'production') {
+  for(let ch in chunks){
+    chunks[ch].forEach((chunk) => {
+      const filename = chunk + '.html'
+      const htmlConf = {
+        // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
+        filename: filename,
+        title: chunk,
+        template: layoutMap[chunk] ||'./layout/layout.tpl',
+        inject: true,
+        templateChunks: false,
+        favicon: './src/assets/img/logo.png',
+        hash: process.env.NODE_ENV === 'production',
+        chunks: ['vendor-' + ch , chunk],
+        appMountId: 'app',
+        googleAnalytics: {
+          trackingId: 'UA-XXXX-XX',
+          pageViewOnLoad: true
+        }
       }
-    }
-    module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
-  })
+      module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
+    })
+  }
+  // module.exports.plugins.push(new HtmlWebpackInlineSourcePlugin())
+} else {
+  for(let ch in chunks){
+    chunks[ch].forEach((chunk) => {
+      const filename = chunk + '.html'
+      const htmlConf = {
+        filename: filename,
+        // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
+        title: chunk,
+        template: layoutMap[chunk] ||'./layout/layout.tpl',
+        inject: true,
+        templateChunks: false,
+        favicon: './src/assets/img/logo.png',
+        hash: process.env.NODE_ENV === 'production',
+        chunks: ['vendor-' + ch , chunk],
+        appMountId: 'app',
+        googleAnalytics: {
+          trackingId: 'UA-XXXX-XX',
+          pageViewOnLoad: true
+        }
+      }
+      module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
+    })
+  }
+  // module.exports.plugins.push(new HtmlWebpackInlineSourcePlugin())
 }
 
 

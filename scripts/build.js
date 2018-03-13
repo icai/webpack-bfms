@@ -9,6 +9,7 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const config = require('../config')
+// const parallelRun = require('parallel-webpack').run
 const webpackConfig = require('./webpack.prod.conf')
 
 const spinner = ora('building for production...')
@@ -16,6 +17,13 @@ spinner.start()
 
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
   if (err) throw err
+  // parallelRun(webpackConfig, {
+  //   watch: false,
+  //   maxRetries: 1,
+  //   stats: true, // defaults to false
+  //   maxConcurrentWorkers: 2 // use 2 workers
+  // })
+  // return false;
   webpack(webpackConfig, (err, stats) => {
     spinner.stop()
     if (err) throw err

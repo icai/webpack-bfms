@@ -99,3 +99,13 @@ exports.createNotifierCallback = () => {
     })
   }
 }
+
+
+const matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g
+
+exports.escapeStringRegexp =  (str) => {
+  if (typeof str !== 'string') {
+    throw new TypeError('Expected a string');
+  }
+  return str.replace(matchOperatorsRe, '\\$&');
+};

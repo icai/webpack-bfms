@@ -5,18 +5,21 @@
   <meta charset="utf-8">
   <title><%= htmlWebpackPlugin.options.title || 'Webpack App'%></title>
 
+<% if (htmlWebpackPlugin.options.templateChunks) { %>
   <% if (htmlWebpackPlugin.files.favicon) { %>
   <link rel="shortcut icon" href="<%= htmlWebpackPlugin.files.favicon%>">
   <% } %>
+<% } %>
   <% if (htmlWebpackPlugin.options.mobile) { %>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <% } %>
-
+<% if (htmlWebpackPlugin.options.templateChunks) { %>
  <% if (htmlWebpackPlugin.files.css) { %>
   <% for (var css in htmlWebpackPlugin.files.css) { %>
   <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
   <% } %>
   <% } %>
+<% } %>
 </head>
 <body>
 <% if (htmlWebpackPlugin.options.unsupportedBrowser) { %>
@@ -28,7 +31,6 @@
   for options.
 </div>
 <% } %>
-
 <% if (htmlWebpackPlugin.options.appMountId) { %>
 <div id="<%= htmlWebpackPlugin.options.appMountId%>"></div>
 <% } %>
@@ -47,14 +49,14 @@
 </script>
 <% } %>
 
-<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-<script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+<% if (htmlWebpackPlugin.options.templateChunks) { %>
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+  <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+  <% } %>
 <% } %>
-
 <% if (htmlWebpackPlugin.options.devServer) { %>
 <script src="<%= htmlWebpackPlugin.options.devServer%>/webpack-dev-server.js"></script>
 <% } %>
-
 <% if (htmlWebpackPlugin.options.googleAnalytics) { %>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
