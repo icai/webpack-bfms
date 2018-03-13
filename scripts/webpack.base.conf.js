@@ -40,6 +40,7 @@ glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}
   }
 })
 
+entries.lib = ['axios'];
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -156,6 +157,8 @@ module.exports.plugins = [
 
 
 
+// https://github.com/jantimon/html-webpack-plugin
+//
 // config template map
 // https://github.com/jaketrent/html-webpack-template
 // https://www.npmjs.com/search?q=%20html-webpack-plugin&page=1&ranking=optimal
@@ -175,7 +178,8 @@ if (process.env.NODE_ENV === 'production') {
         templateChunks: false,
         favicon: './src/assets/img/logo.png',
         hash: process.env.NODE_ENV === 'production',
-        chunks: ['vendor-' + ch , chunk],
+        chunks: ['manifest', 'lib','vendor-' + ch , chunk],
+        chunksSortMode: 'dependency',
         appMountId: 'app',
         googleAnalytics: {
           trackingId: 'UA-XXXX-XX',
@@ -199,7 +203,8 @@ if (process.env.NODE_ENV === 'production') {
         templateChunks: false,
         favicon: './src/assets/img/logo.png',
         hash: process.env.NODE_ENV === 'production',
-        chunks: ['vendor-' + ch , chunk],
+        chunks: ['lib', 'vendor-' + ch , chunk],
+        chunksSortMode: 'dependency',
         appMountId: 'app',
         googleAnalytics: {
           trackingId: 'UA-XXXX-XX',
