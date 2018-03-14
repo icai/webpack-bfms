@@ -5,6 +5,7 @@ const config = require('../config')
 const layoutMap = require('../config/layout.map')
 const glob = require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
+// const webpack = require('webpack')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
@@ -40,7 +41,8 @@ glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}
   }
 })
 
-entries.lib = ['axios', 'jquery'];
+// entries.axios = ['axios'];
+// entries.jquery = ['jquery'];
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -144,7 +146,7 @@ module.exports.plugins = [
   // new webpack.ProvidePlugin({
   //   $: 'jquery',
   //   jQuery: 'jquery'
-  // })
+  // }),
   // @todo Separate vue react framework CommonsChunkPlugin
   // new webpack.optimize.ModuleConcatenationPlugin(),
   new CommonsChunkPlugin({
@@ -156,6 +158,11 @@ module.exports.plugins = [
     name: 'vendor-react',
     chunks: chunks.react,
     minChunks: chunks.react.length
+  }),
+  new CommonsChunkPlugin({
+    name: 'lib',
+    chunks: ['axios', 'jquery'],
+    minChunks: 2
   })
 ];
 

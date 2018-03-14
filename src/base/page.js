@@ -4,6 +4,8 @@ import ElementUI from 'element-ui'
 import "normalize.css/normalize.css"
 import 'element-ui/lib/theme-chalk/index.css'
 
+window.$ = $;
+window.jQuery = $;
 function relMethod(target, source, methods) {
   if (typeof methods == 'string') {
     methods = [methods];
