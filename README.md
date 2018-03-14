@@ -67,6 +67,11 @@ https://github.com/akxcv/vuera (Vue in React, React in Vue. Seamless integration
 查看分支 `single-multi`
 
 
+## vue jQuery 混用
+
+查看分支 `vue-jQuery`
+
+
 ----
 
 ## 参考

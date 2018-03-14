@@ -40,7 +40,7 @@ glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}
   }
 })
 
-entries.lib = ['axios'];
+entries.lib = ['axios', 'jquery'];
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -141,6 +141,10 @@ module.exports = {
 }
 
 module.exports.plugins = [
+  // new webpack.ProvidePlugin({
+  //   $: 'jquery',
+  //   jQuery: 'jquery'
+  // })
   // @todo Separate vue react framework CommonsChunkPlugin
   // new webpack.optimize.ModuleConcatenationPlugin(),
   new CommonsChunkPlugin({
