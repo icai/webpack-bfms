@@ -2,13 +2,15 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
+
 const layoutMap = require('../config/layout.map')
 const chunksMap = require('../config/chunks.map')
 const glob = require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
-// const webpack = require('webpack')
+const webpack = require('webpack')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MultipageWebpackPlugin = require('./webpack.multipage.plugin')
 // const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 
 function resolve (dir) {
@@ -28,14 +30,12 @@ const createLintingRule = () => ({
 
 
 // https://github.com/webpack/webpack/issues/370
-let chunks = []
+// let chunks = []
 const globEntries = (globPath) => {
   const entries = {}
-  chunks = []
   glob.sync(globPath, {root: path.resolve(__dirname, '../')}).forEach(path => {
     const chunk = path.split('./src/pages/')[1].split(/\/app\.js/)[0]
     entries[chunk] = path
-    chunks.push(chunk)
   })
   return entries
 }
@@ -61,7 +61,12 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      src: resolve('src'),
+      static: resolve('static'),
       assets: resolve('src/assets'),
+      packages: resolve('packages'),
+      mini: resolve('packages/mini'),
+      vuo: resolve('src/base/vue'),
       components: resolve('src/components'),
       root: resolve('node_modules'),
       ajax: resolve('src/base/axios')
@@ -143,23 +148,23 @@ module.exports = {
 
 
 module.exports.plugins = [
-  // new webpack.ProvidePlugin({
-  //   $: 'jquery',
-  //   jQuery: 'jquery'
-  // }),
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery'
+  })
   // @todo Separate vue react framework CommonsChunkPlugin
   // new webpack.optimize.ModuleConcatenationPlugin(),
 ];
 
 
-chunksMap.forEach((chunk) => {
-  let chunkConf = new CommonsChunkPlugin({
-    name: chunk.name,
-    chunks: chunk.chunks,
-    minChunks: chunk.chunks.length
-  })
-  module.exports.plugins.push(new CommonsChunkPlugin(chunkConf))
-})
+// chunksMap.forEach((chunk) => {
+//   let chunkConf = new CommonsChunkPlugin({
+//     name: chunk.name,
+//     chunks: chunk.chunks,
+//     minChunks: chunk.chunks.length
+//   })
+//   module.exports.plugins.push(new CommonsChunkPlugin(chunkConf))
+// })
 
 
 // https://github.com/jantimon/html-webpack-plugin
@@ -170,50 +175,52 @@ chunksMap.forEach((chunk) => {
 // https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md
 
 if (process.env.NODE_ENV === 'production') {
-  chunks.forEach((chunk) => {
-    const filename = chunk + '.html'
-    const htmlConf = {
-      // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
-      filename: filename,
-      title: chunk,
-      template: layoutMap[chunk] ||'./layout/layout.tpl',
+
+  const htmlConf = {
+    htmlTemplatePath: function (entryKey) {
+      return layoutMap[entryKey] ||'./layout/miniui.tpl'
+    },
+    templateFilename: '[name].html',
+    templatePath: './',
+    htmlWebpackPluginOptions: {
       inject: true,
       templateChunks: false,
       favicon: './src/assets/img/logo.png',
       hash: process.env.NODE_ENV === 'production',
-      chunks: ['manifest', 'lib', 'vendor' , chunk],
-      chunksSortMode: 'dependency',
+      // chunks: ['manifest', 'lib', 'vendor' , chunk],
+      // chunksSortMode: 'dependency',
       appMountId: 'app',
       googleAnalytics: {
         trackingId: 'UA-XXXX-XX',
         pageViewOnLoad: true
       }
     }
-    module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
-  })
-  // module.exports.plugins.push(new HtmlWebpackInlineSourcePlugin())
+  }
+  module.exports.plugins.push(new MultipageWebpackPlugin(htmlConf))
+
 } else {
-  chunks.forEach((chunk) => {
-    const filename = chunk + '.html'
-    const htmlConf = {
-      filename: filename,
-      // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
-      title: chunk,
-      template: layoutMap[chunk] ||'./layout/layout.tpl',
+  const htmlConf = {
+    htmlTemplatePath: function (entryKey) {
+      return layoutMap[entryKey] ||'./layout/miniui.tpl'
+    },
+    templateFilename: '[name].html',
+    templatePath: './',
+    htmlWebpackPluginOptions: {
       inject: true,
       templateChunks: false,
       favicon: './src/assets/img/logo.png',
       hash: process.env.NODE_ENV === 'production',
-      chunks: ['lib', 'vendor', chunk],
-      chunksSortMode: 'dependency',
+      // chunks: ['manifest', 'lib', 'vendor' , chunk],
+      // chunksSortMode: 'dependency',
       appMountId: 'app',
       googleAnalytics: {
         trackingId: 'UA-XXXX-XX',
         pageViewOnLoad: true
       }
     }
-    module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
-  })
+  }
+
+  module.exports.plugins.push(new MultipageWebpackPlugin(htmlConf))
   // module.exports.plugins.push(new HtmlWebpackInlineSourcePlugin())
 }
 

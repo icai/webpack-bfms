@@ -19,6 +19,9 @@ module.exports = {
 	  "eslint:recommended"
     // "plugin:mocha/recommended"
   ],
+  globals: {
+    "mini": true
+  },
   // required to lint *.vue files
   plugins: [
     'vue',
