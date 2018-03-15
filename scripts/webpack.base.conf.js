@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const layoutMap = require('../config/layout.map')
+const chunksMap = require('../config/chunks.map')
 const glob = require('glob')
 const vueLoaderConfig = require('./vue-loader.conf')
 // const webpack = require('webpack')
@@ -25,21 +26,19 @@ const createLintingRule = () => ({
   }
 })
 
-const entries = {}
-const chunks = {}
-chunks.vue = [];
-chunks.react = [];
-// vue use js,
-// react use jsx
-glob.sync('./src/pages/**/app.@(js|jsx)', {root: path.resolve(__dirname, '../')}).forEach(path => {
-  const chunk = path.split('./src/pages/')[1].split(/\/app\.jsx?/)[0]
-  entries[chunk] = path
-  if(path.endsWith('js')) {
-    chunks.vue.push(chunk)
-  } else if(path.endsWith('jsx')) {
-    chunks.react.push(chunk)
-  }
-})
+
+// https://github.com/webpack/webpack/issues/370
+let chunks = []
+const globEntries = (globPath) => {
+  const entries = {}
+  chunks = []
+  glob.sync(globPath, {root: path.resolve(__dirname, '../')}).forEach(path => {
+    const chunk = path.split('./src/pages/')[1].split(/\/app\.js/)[0]
+    entries[chunk] = path
+    chunks.push(chunk)
+  })
+  return entries
+}
 
 // entries.axios = ['axios'];
 // entries.jquery = ['jquery'];
@@ -49,7 +48,7 @@ module.exports = {
   // entry: {
   //   app: './src/main.js'
   // },
-  entry: entries,
+  entry: globEntries('./src/pages/**/app.@(js)'),
   output: {
     path: config.build.assetsRoot,
     filename: 'assets/js/[name].js',
@@ -142,6 +141,7 @@ module.exports = {
   }
 }
 
+
 module.exports.plugins = [
   // new webpack.ProvidePlugin({
   //   $: 'jquery',
@@ -149,23 +149,17 @@ module.exports.plugins = [
   // }),
   // @todo Separate vue react framework CommonsChunkPlugin
   // new webpack.optimize.ModuleConcatenationPlugin(),
-  new CommonsChunkPlugin({
-    name: 'vendor-vue',
-    chunks: chunks.vue,
-    minChunks: chunks.vue.length
-  }),
-  new CommonsChunkPlugin({
-    name: 'vendor-react',
-    chunks: chunks.react,
-    minChunks: chunks.react.length
-  }),
-  new CommonsChunkPlugin({
-    name: 'lib',
-    chunks: ['axios', 'jquery'],
-    minChunks: 2
-  })
 ];
 
+
+chunksMap.forEach((chunk) => {
+  let chunkConf = new CommonsChunkPlugin({
+    name: chunk.name,
+    chunks: chunk.chunks,
+    minChunks: chunk.chunks.length
+  })
+  module.exports.plugins.push(new CommonsChunkPlugin(chunkConf))
+})
 
 
 // https://github.com/jantimon/html-webpack-plugin
@@ -175,56 +169,51 @@ module.exports.plugins = [
 // https://www.npmjs.com/search?q=%20html-webpack-plugin&page=1&ranking=optimal
 // https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md
 
-
 if (process.env.NODE_ENV === 'production') {
-  for(let ch in chunks){
-    chunks[ch].forEach((chunk) => {
-      const filename = chunk + '.html'
-      const htmlConf = {
-        // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
-        filename: filename,
-        title: chunk,
-        template: layoutMap[chunk] ||'./layout/layout.tpl',
-        inject: true,
-        templateChunks: false,
-        favicon: './src/assets/img/logo.png',
-        hash: process.env.NODE_ENV === 'production',
-        chunks: ['manifest', 'lib','vendor-' + ch , chunk],
-        chunksSortMode: 'dependency',
-        appMountId: 'app',
-        googleAnalytics: {
-          trackingId: 'UA-XXXX-XX',
-          pageViewOnLoad: true
-        }
+  chunks.forEach((chunk) => {
+    const filename = chunk + '.html'
+    const htmlConf = {
+      // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
+      filename: filename,
+      title: chunk,
+      template: layoutMap[chunk] ||'./layout/layout.tpl',
+      inject: true,
+      templateChunks: false,
+      favicon: './src/assets/img/logo.png',
+      hash: process.env.NODE_ENV === 'production',
+      chunks: ['manifest', 'lib', 'vendor' , chunk],
+      chunksSortMode: 'dependency',
+      appMountId: 'app',
+      googleAnalytics: {
+        trackingId: 'UA-XXXX-XX',
+        pageViewOnLoad: true
       }
-      module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
-    })
-  }
+    }
+    module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
+  })
   // module.exports.plugins.push(new HtmlWebpackInlineSourcePlugin())
 } else {
-  for(let ch in chunks){
-    chunks[ch].forEach((chunk) => {
-      const filename = chunk + '.html'
-      const htmlConf = {
-        filename: filename,
-        // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
-        title: chunk,
-        template: layoutMap[chunk] ||'./layout/layout.tpl',
-        inject: true,
-        templateChunks: false,
-        favicon: './src/assets/img/logo.png',
-        hash: process.env.NODE_ENV === 'production',
-        chunks: ['lib', 'vendor-' + ch , chunk],
-        chunksSortMode: 'dependency',
-        appMountId: 'app',
-        googleAnalytics: {
-          trackingId: 'UA-XXXX-XX',
-          pageViewOnLoad: true
-        }
+  chunks.forEach((chunk) => {
+    const filename = chunk + '.html'
+    const htmlConf = {
+      filename: filename,
+      // inlineSource: utils.escapeStringRegexp(chunk) + '.(js|css)$',
+      title: chunk,
+      template: layoutMap[chunk] ||'./layout/layout.tpl',
+      inject: true,
+      templateChunks: false,
+      favicon: './src/assets/img/logo.png',
+      hash: process.env.NODE_ENV === 'production',
+      chunks: ['lib', 'vendor', chunk],
+      chunksSortMode: 'dependency',
+      appMountId: 'app',
+      googleAnalytics: {
+        trackingId: 'UA-XXXX-XX',
+        pageViewOnLoad: true
       }
-      module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
-    })
-  }
+    }
+    module.exports.plugins.push(new HtmlWebpackPlugin(htmlConf))
+  })
   // module.exports.plugins.push(new HtmlWebpackInlineSourcePlugin())
 }
 
