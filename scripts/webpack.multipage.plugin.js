@@ -56,6 +56,7 @@ class MultipageWebpackPlugin {
       let htmlWebpackPluginOptions = {
         filename: this.getFullTemplatePath(entryKey),
         chunksSortMode: 'dependency',
+        // build need manifest chunk
         chunks: ['inline', this.vendorChunkName, entryKey, this.sharedChunkName]
       };
 
@@ -67,8 +68,6 @@ class MultipageWebpackPlugin {
         }
       }
       let htmlConfig = Object.assign({}, this.htmlWebpackPluginOptions, htmlWebpackPluginOptions)
-      console.info(htmlConfig)
-
       compiler.apply(
         new HtmlWebpackPlugin(htmlConfig)
       );
